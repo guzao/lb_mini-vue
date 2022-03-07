@@ -31,14 +31,23 @@ class ReactiveEffect {
   /** 配置参数 传入首次执行fn, 当数据变更后不会再执行fn而是调用scheduler */
   public scheduler
 
+  
   /** 存储副作用 */
   public dep = []
 
-  /** 是否没有执行过stop函数 */
+  /** 
+   * 是否没有执行过stop函数
+  */
   public active: boolean = true
-  
-  constructor(fn: anyFn, scheduler? ) {
+
+  /**
+   * 执行过stop函数后的回调
+  */
+  public onStop
+
+  constructor(fn: anyFn, scheduler?, onStop?) {
     this.scheduler = scheduler
+    this.onStop = onStop
     this.fn = fn
   }
 
@@ -47,15 +56,36 @@ class ReactiveEffect {
    * 数据变化函数执行
   */
   run (): anyFn {
+    
+    // 如果是关闭的状态就说明不在需要收集依赖
+    if (!this.active) {
+      return this.fn()
+    }
+    // 执行前将shouldTrack 开关 打开
+    shouldTrack = true
     activeEffect = this
-    return this.fn()
+    /** 这里依赖收集 */
+    const result = this.fn()
+    /* 收集完成过后将 shouldTrack 开关 关闭 **/
+    shouldTrack = false
+    activeEffect = undefined;
+    return result
+
   }
 
 
   /** 清除收集的依赖 后续数据变更后副作用不在执行 */
   stop (): void {
-    if (!this.active) {
+
+    // 如果没有执行就执行 并且将stop 的状态关闭
+    if (this.active) {
       cleanupEffect(this)
+      // 将开关关闭
+      this.active = false
+      /**传入了onStop 函数就在执行过stop函数后执行onStop逻辑 */
+      if (this.onStop) {
+        this.onStop()
+      }
     }
   }
 
@@ -77,6 +107,7 @@ export function stop (runner: effectFn): void {
 export function track (target: object, key: any) {
 
   if (!activeEffect) return 
+  // if (!shouldTrack)  return
 
   let depsMap = targetMap.get(target)
   if (!depsMap) {
@@ -122,7 +153,7 @@ export function triggerEffects (dep): void {
 */
 export function effect (fn: anyFn, options: any = {} ): effectFn {
 
-  let _effect: ReactiveEffect = new ReactiveEffect(fn, options.scheduler)
+  let _effect: ReactiveEffect = new ReactiveEffect(fn, options.scheduler, options.onStop)
 
   _effect.run()
 
