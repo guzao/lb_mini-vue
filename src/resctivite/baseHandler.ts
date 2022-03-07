@@ -1,25 +1,14 @@
 import { track, trigger } from "./effect"
 
+export const enum ReactiveFlags {
+  IS_REACTIVE = "__v_isReactive",
+  IS_READONLY = "__v_isReadonly",
+}
+
+
 const get = createGetter()
 const set = createSetter()
 const readonlyGet = createGetter(true)
-
-
-export const mutableHandlers = {
-  get,
-  set,
-}
-
-export const readonlyHandlers = {
-  get: readonlyGet,
-  set (target: object, key: any, value: any) {
-    console.warn(
-      `key :"${String(key)}" set 失败，因为 target 是 readonly 类型`,
-      target
-    );
-    return true
-  }
-}
 
 
 /**
@@ -28,6 +17,13 @@ export const readonlyHandlers = {
 */
 export function createGetter (isReadonly = false) {
   return function get (target: object, key: any) {
+
+    if (key == ReactiveFlags.IS_READONLY) {
+      return isReadonly
+    } else if (key == ReactiveFlags.IS_REACTIVE) {
+      return !isReadonly
+    }
+
     let res = Reflect.get(target, key)
 
     if (!isReadonly) {
@@ -47,5 +43,28 @@ export function createSetter () {
     trigger(target, key)
     
     return res
+  }
+}
+
+
+/**
+ * reactive  get set
+*/
+export const mutableHandlers = {
+  get,
+  set,
+}
+
+/**
+ * readonly get set
+*/
+export const readonlyHandlers = {
+  get: readonlyGet,
+  set (target: object, key: any, value: any) {
+    console.warn(
+      `key :"${String(key)}" set 失败，因为 target 是 readonly 类型`,
+      target
+    );
+    return true
   }
 }
