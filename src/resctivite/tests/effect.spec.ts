@@ -2,18 +2,6 @@
 import { reactive } from "../reactive.ts";
 import { effect, stop } from '../effect'
 
-// describe("effect", () => {
-
-
-
-
-
-
-
-// });
-
-
-
 describe('effect' , () => {
   
   it('happy path ', () => {

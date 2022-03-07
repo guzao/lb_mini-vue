@@ -1,18 +1,19 @@
-import { track, trigger } from "./effect"
+import { mutableHandlers, readonlyHandlers } from "./baseHandler"
 
+
+
+/**
+ * @raw 原始数据 object类型
+ * 响应式对象
+*/
 export function reactive (raw: any) {
-  return new Proxy(raw, {
-    get (target: object, key: any) {
-      let res = Reflect.get(target, key)
-      track(target, key)
+  return new Proxy(raw, mutableHandlers)
+}
 
-      return res
-    },
-    set (target: object, key: any, value: any) {
-      let res = Reflect.set(target, key, value)
-      trigger(target, key)
-      
-      return res
-    }
-  })
+/**
+ * @raw 原始数据 object类型
+ * 只读对象
+*/
+export function readonly (raw: any): any {
+  return new Proxy(raw, readonlyHandlers)
 }
