@@ -1,4 +1,4 @@
-import { mutableHandlers, ReactiveFlags, readonlyHandlers } from "./baseHandler"
+import { mutableHandlers, ReactiveFlags, readonlyHandlers, shallowReadonlyHandlers } from "./baseHandler"
 
 
 /**
@@ -22,6 +22,15 @@ export function isReactive (value): boolean {
 export function readonly (raw: any): any {
   return creayeReactive(raw, readonlyHandlers)
 }
+
+/**
+ * 数据浅代理 代理第一层属性
+ * @raw 需要被检测的数据
+*/
+export function shallowReadonly (raw: any): any {
+  return creayeReactive(raw, shallowReadonlyHandlers)
+} 
+
 /** 检测是否是 readonly 数据类型
  * @value 需要检查的数据
  */
@@ -37,6 +46,7 @@ export function isProxy (value): boolean {
   return isReactive(value) || isReadonly(value)
 }
 
+
 /**
  * 初始化Proxy 代理对象
  * @raw 需要代理的数据
@@ -45,3 +55,4 @@ export function isProxy (value): boolean {
 function creayeReactive (raw: object, mutableHandlers) {
   return new Proxy(raw, mutableHandlers)
 }
+

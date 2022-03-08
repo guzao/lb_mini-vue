@@ -93,6 +93,10 @@ class ReactiveEffect {
 
 }
 
+/**
+ * @effect 收集的副作用函数 
+ * @ 清除收集的依赖函数
+*/
 export function cleanupEffect (effect): void {
   effect.dep.forEach((dep: Set<any>) => {
     dep.delete(effect)
