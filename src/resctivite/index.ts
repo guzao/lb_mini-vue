@@ -1,3 +1,3 @@
 export * from './ref'
-export * from './reactive.ts'
+export * from './reactive'
 export * from './effect'

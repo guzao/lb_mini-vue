@@ -1,6 +1,6 @@
 import { isObject } from "../shared/shared"
 import { track, trigger } from "./effect"
-import { isReactive, reactive, readonly } from "./reactive.ts"
+import { isReactive, reactive, readonly } from "./reactive"
 import { isRef } from "./ref"
 
 export const enum ReactiveFlags {

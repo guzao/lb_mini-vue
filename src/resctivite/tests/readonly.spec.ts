@@ -1,4 +1,4 @@
-import { isProxy, isReadonly, readonly } from "../reactive.ts";
+import { isProxy, isReadonly, readonly } from "../reactive";
 
 describe("readonly", () => {
   

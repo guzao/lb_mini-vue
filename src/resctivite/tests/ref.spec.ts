@@ -1,5 +1,5 @@
 import { effect } from "../effect";
-import { reactive } from "../reactive.ts";
+import { reactive } from "../reactive";
 import {  isRef, ref ,unRef, proxyRefs } from "../ref";
 describe("ref", () => {
   it("happy path", () => {

@@ -1,7 +1,7 @@
 import { hasChanged, isObject } from "../shared/shared"
 import { proxyRefsHandlers } from "./baseHandler"
 import { isTracking, trackEffects, triggerEffects } from "./effect"
-import { reactive } from "./reactive.ts"
+import { reactive } from "./reactive"
 
 /**
  * RefImpl

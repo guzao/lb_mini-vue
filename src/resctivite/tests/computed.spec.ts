@@ -1,5 +1,5 @@
 import { computed } from "../computed";
-import { reactive } from "../reactive.ts";
+import { reactive } from "../reactive";
 
 
 describe("computed", () => {
