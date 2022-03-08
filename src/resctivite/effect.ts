@@ -26,7 +26,7 @@ let shouldTrack: boolean = false
  * 
  * 一个effect 对应一个ReactiveEffect实例
 */
-class ReactiveEffect {
+export class ReactiveEffect {
   /** 传入的fn*/
   public fn: anyFn
 
