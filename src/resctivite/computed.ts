@@ -18,16 +18,15 @@ export class ComputedImpl {
       if (!this._dirty) {
         this._dirty = true
       }
-      
+
     })
 
   }
 
   get value () {
     /**
-     * @ 通过this._dirty 标记是否初始化过this._value 的值
-     * @ 读取过后将状态标记为false 后续依赖的数据没有变化就不再给this._value 重新赋值
-     * @ 直接将之前读取的返沪即可
+     * @ 通过this._dirty 标记是否初始化过this._value 的值 
+     * @ 读取过后将状态标记为false 后续依赖的数据没有变化就不再给this._value 重新赋值 直接将之前读取的返沪即可
     */
     if (this._dirty) {
       this._dirty = false
