@@ -1,3 +1,5 @@
+import { extend } from "../shared/shared"
+
 type anyFn = () => any
 
 /** effect 函数的返回值 */
@@ -106,8 +108,7 @@ export function stop (runner: effectFn): void {
 /** 收集依赖 */
 export function track (target: object, key: any) {
 
-  if (!activeEffect) return 
-  // if (!shouldTrack)  return
+  if (!isTracking()) return
 
   let depsMap = targetMap.get(target)
   if (!depsMap) {
@@ -122,6 +123,18 @@ export function track (target: object, key: any) {
   dep.add(activeEffect)
   activeEffect.dep.push(dep)
 }
+/**
+ * @dep 存储副作用
+ * 收集依赖
+*/
+export function trackEffects (dep: Set<any>): void {
+  dep.add(activeEffect)
+  activeEffect.dep.push(dep)
+}
+
+export function isTracking (): boolean {
+  return activeEffect !== undefined && shouldTrack
+}
 
 
 /** 触发依赖 */
@@ -129,6 +142,7 @@ export function trigger (target: object, key: any) {
 
   let depsMap = targetMap.get(target)
   let dep = depsMap.get(key)
+  
   triggerEffects(dep)
 
 }
@@ -153,7 +167,10 @@ export function triggerEffects (dep): void {
 */
 export function effect (fn: anyFn, options: any = {} ): effectFn {
 
-  let _effect: ReactiveEffect = new ReactiveEffect(fn, options.scheduler, options.onStop)
+  // let _effect: ReactiveEffect = new ReactiveEffect(fn, options.scheduler, options.onStop)
+  
+  let _effect: ReactiveEffect = new ReactiveEffect(fn)
+  extend(_effect, options)
 
   _effect.run()
 

@@ -1,4 +1,6 @@
+import { isObject } from "../shared/shared"
 import { track, trigger } from "./effect"
+import { isReactive, reactive, readonly } from "./reactive.ts"
 
 export const enum ReactiveFlags {
   IS_REACTIVE = "__v_isReactive",
@@ -16,6 +18,7 @@ const readonlyGet = createGetter(true)
  * @isReadonly 只读数据 默认为false 只读数据不需要进行依赖收集
 */
 export function createGetter (isReadonly = false) {
+
   return function get (target: object, key: any) {
 
     if (key == ReactiveFlags.IS_READONLY) {
@@ -25,6 +28,15 @@ export function createGetter (isReadonly = false) {
     }
 
     let res = Reflect.get(target, key)
+    
+    /**
+     * 如果访问的数据是object类型
+     * 就根据当前isReadonly的状态代理不同的数据类型
+    */
+
+    if (isObject(res)) {
+      return isReadonly ? readonly(res) : reactive(res);
+    }
 
     if (!isReadonly) {
       track(target, key)
@@ -32,6 +44,7 @@ export function createGetter (isReadonly = false) {
 
     return res
   }
+
 }
 
 /**
