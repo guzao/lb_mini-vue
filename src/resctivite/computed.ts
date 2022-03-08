@@ -1,15 +1,22 @@
 
 
 export class ComputedImpl {
-  
+
   public _getter
 
+  public _value
+
+  private _dirty: boolean = true; 
   constructor(getter) {
     this._getter = getter
   }
 
   get value () {
-    return this._getter()
+    if (this._dirty) {
+      this._value = this._getter()
+      this._dirty = false
+    }
+    return this._value
   }
 
 }
