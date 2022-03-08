@@ -45,20 +45,24 @@ function processElement(vnode: any, container: any) {
 */
 function mountElement(vnode: any, container: any) {
 
-  const { type, children } = vnode
-
+  const { type, children, props } = vnode
+  console.log(vnode)
   // 创建元素
   const el: Element = document.createElement(type)
 
+  // Element
   // 检查children 是否是 字符串
   if (typeof children == 'string' ) {
     el.textContent = children
-  } 
-
-  // 如果是数组类型就递归 patch 处理
-  if (isArray(children)) {
+  }  else if (isArray(children)) { // 如果是数组类型就递归 patch 处理
     mountChildren(children, el)
   }
+
+  // proprs 设置属性
+  for (const key in props) {
+    el.setAttribute(key, props[key])
+  }
+
 
   // 添加到根容器中
   container.append(el)
