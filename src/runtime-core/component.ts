@@ -9,7 +9,10 @@ export function createComponentInstance (vnode: any) {
   const Component = {
     /** 虚拟节点 */
     vnode,
-    type: vnode.type
+    /***/
+    type: vnode.type,
+    /** setup 函数的返回值 */
+    setupState: {}
   }
   return Component
 
@@ -22,23 +25,31 @@ export function createComponentInstance (vnode: any) {
 */
 export function setupComponent (instance: any) {
 
-  // TODO
-  // initProps()
-  // initSlots()
-
+  /**
+   * 组件
+  */
   setupStatefulComponent(instance)
-  
+
 }
 
 /**
  * 初始化有状态的组件
- * @instance 组件实例
 */
 function setupStatefulComponent(instance: any) {
-  /**
-   * 组件
-  */
+
   const Component = instance.type
+
+  // 实现组件代理 
+  instance.proxy = new Proxy({}, {
+    get (target, key) {
+      const { setupState } = instance
+      if (key in setupState) {
+        return setupState[key]
+      }
+    },
+  })
+
+
   /**
    * 用户传入的 setup 函数执行后可以得到数据 或视图
   */

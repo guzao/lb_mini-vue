@@ -17,7 +17,8 @@ export default {
   name: "App",
   setup() {
     return {
-      obj: 'mini-vue'
+      obj: 'mini-vue',
+      hg: '哈哈啊哈'
     }
   },
   render() {
@@ -38,11 +39,14 @@ export default {
     // ]);
 
     // 测试子元素是组件类型
-    // return h("div", { test: 'test'  }, )
-
+    // return h("div", { test: 'test' }, [ h(Foo), h(Foo) , h('span', { class: 'red blue' }, 'opopp')])
 
     // 添加属性
-    return h("div", { class: 'red blue', id: 'div' }, 'ceshi');
+    // return h("div", { class: 'red blue', id: 'div' }, 'ceshi');
+
+    const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
+    // 组件代理
+    return h('div', { class: 'red' },  [ h('div', {} , this.obj + this.hg), foo ])
 
   },
 };

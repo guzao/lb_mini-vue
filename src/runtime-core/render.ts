@@ -17,6 +17,7 @@ export function render (vnode, container) {
 function patch(vnode: any, container: any) {
   const { type } = vnode
 
+
   if (typeof type == 'object') {
     processComponent(vnode, container)
   } else {
@@ -46,7 +47,6 @@ function processElement(vnode: any, container: any) {
 function mountElement(vnode: any, container: any) {
 
   const { type, children, props } = vnode
-  console.log(vnode)
   // 创建元素
   const el: Element = document.createElement(type)
 
@@ -110,9 +110,12 @@ function mountComponent(vnode: any, container) {
  * @container 挂载的容器
 */
 function setupRenderEffect(instance: any, container) {
+
+  let { proxy } = instance
   
   /** 需要渲染的视图 */
-  const subTree = instance.render()
+  // 将render函数的this执向组件的代理对象
+  const subTree = instance.render.call(proxy)
 
   patch(subTree, container)
 
