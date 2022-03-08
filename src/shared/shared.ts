@@ -19,3 +19,8 @@ export function hasChanged (value: any, newValue: any): boolean {
  * 对象合并
 */
 export const extend =  Object.assign
+
+/**
+ * 是否是数组
+*/
+export const isArray = Array.isArray

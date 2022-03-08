@@ -1,4 +1,4 @@
-import { ReactiveEffect } from ".";
+import { ReactiveEffect } from "./effect"
 
 
 export class ComputedImpl {
