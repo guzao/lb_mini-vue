@@ -30,6 +30,7 @@ export default {
   },
   render() {
     console.log(this, '====')
+    window.kl = this
     // 测试单个元素
     // return h("div", { test: 'test'  }, 'ceshi');
 
@@ -47,7 +48,7 @@ export default {
     // ]);
 
     // 测试子元素是组件类型
-    // return h("div", { test: 'test' }, [ h(Foo, { foo: [{}] }), h(Foo, { foo: [] }) , h('span', { class: 'red blue' }, 'opopp')])
+    return h("div", { test: 'test' }, [ h(Foo, { foo: [{}] }), h(Foo, { foo: [] }) , h('span', { class: 'red blue' }, 'opopp')])
 
     // 添加属性
     // return h("div", { class: 'red blue', id: 'div' }, 'ceshi');
@@ -55,7 +56,7 @@ export default {
     // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
     // 组件代理 x
     // return h('div', { class: 'red' },  [ h('div', {} , 'FOO'), foo ])
-    return h('div', { class: 'red' }, this.hg)
+    // return h('div', { class: 'red' }, this.hg + this.obj)
 
   },
 };

@@ -69,6 +69,24 @@ function initProps(instance: any, rawProps: any) {
  * @instance 组件实例
 */
 function setupStatefulComponent(instance: any) {
+
+
+  instance.proxy = new Proxy({}, {
+    get (target, key: any) {
+
+      const { setupState } = instance
+      
+      if (key in setupState) {
+        return setupState[key]
+      }
+
+      if (key === '$el') {
+        return instance.vnode.el
+      }
+
+    }
+  })
+
   console.log('初始化有状态的组件')
 
   const Component = instance.type
@@ -117,11 +135,14 @@ function finishComponentSetup(instance: any) {
 */
 function setupRenderEffect(instance, vnode, container) {
 
-  const subTree = instance.render()
+  const { proxy } = instance
+
+  const subTree = instance.render.call(proxy)
 
   console.log(instance, vnode, '组件处理完成交给patch 处理', subTree)
 
   patch(subTree, container)
+  vnode.el = subTree.el
 
 }
 

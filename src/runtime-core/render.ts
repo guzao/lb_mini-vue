@@ -52,7 +52,7 @@ export function processElement(vnode: VnodeType, container: RootElnemt) {
 function mountElement(vnode: any, container: any) {
   console.log('=== 挂载元素 ===')
   const { type, children, props } = vnode
-  const el: Element = document.createElement(type)
+  const el: Element = (vnode.el = document.createElement(type))
 
   // 元素设置
   if (typeof children === 'string') {
