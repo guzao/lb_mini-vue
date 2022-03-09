@@ -1,6 +1,6 @@
 import { isArray } from "../shared/shared";
 import { createComponentInstance, setupComponent } from "./component";
-
+const isOn = (key: string) =>  /^on[A-Z]/.test(key)
 /**
  * @vnode 虚拟节点
  * @container 挂载的容器
@@ -53,7 +53,6 @@ function mountElement(vnode: any, container: any) {
   const { type, children, props } = vnode
   // 创建元素
   const el: Element =  (vnode.el = document.createElement(type))
-
   // Element
   // 检查children 是否是 字符串
   if (typeof children == 'string' ) {
@@ -62,9 +61,17 @@ function mountElement(vnode: any, container: any) {
     mountChildren(children, el)
   }
 
-  // proprs 设置属性
+  // proprs 
   for (const key in props) {
-    el.setAttribute(key, props[key])
+
+    if (isOn(key)) {  // 绑定事件
+      const eventKey: string = key.slice(2).toLocaleLowerCase()
+      const event = props[key]
+      container.addEventListener(eventKey, event)
+    } else {          // 设置属性
+      el.setAttribute(key, props[key])
+    }
+
   }
 
 
@@ -124,7 +131,7 @@ function setupRenderEffect(instance: any, vnode, container) {
   patch(subTree, container)
 
   // 给组件实例添加挂载元素属性
-  instance.el = subTree.el
+  vnode.el = subTree.el
 }
 
 

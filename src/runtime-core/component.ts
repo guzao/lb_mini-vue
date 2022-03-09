@@ -1,3 +1,4 @@
+import { shallowReadonly } from "../resctivite";
 import { PublicInstanceProxyHandlers } from "./componentProps"
 
 /**
@@ -14,8 +15,6 @@ export function createComponentInstance (vnode: any) {
     type: vnode.type,
     /** setup 函数的返回值 */
     setupState: {},
-    /** 组件挂载的节点 */
-    el: null
   }
   return Component
 
@@ -28,19 +27,23 @@ export function createComponentInstance (vnode: any) {
 */
 export function setupComponent (instance: any) {
 
-  /**
-   * 组件
-  */
+  // 处理props
+  initProps(instance, instance.type.props);
+  // 处理组件
   setupStatefulComponent(instance)
-
 }
+
+function initProps(instance: any, rawProps: any) {
+  instance.props = rawProps || {}
+}
+
 
 /**
  * 初始化有状态的组件
  * @instance 组件实例
 */
 function setupStatefulComponent(instance: any) {
-
+  console.log(instance)
   const Component = instance.type
  
   // 实现组件代理  instance 组件实例
@@ -49,11 +52,11 @@ function setupStatefulComponent(instance: any) {
   /**
    * 用户传入的 setup 函数执行后可以得到数据 或视图
   */
-  const { setup } = Component
+  const { setup, props } = Component
 
   if (setup) {
 
-    const setupResult = setup()
+    const setupResult = setup(shallowReadonly(props))
 
     handleSetupResult(instance, setupResult)
 
@@ -95,3 +98,4 @@ function finishComponentSetup(instance: any) {
   instance.render = Component.render
 
 }
+

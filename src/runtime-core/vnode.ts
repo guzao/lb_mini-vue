@@ -8,7 +8,9 @@ export function createVNode(type, props?, children?) {
   const vnode = {
     type,
     props,
-    children
+    children,
+    /** 组件挂载的节点 */
+    el: null,
   }
   return vnode
 }

@@ -1,28 +1,21 @@
 
 import { h } from '../../lib/guide-mini-vue.esm.js'
 window.self = null
-const Foo = {
-  name: "Foo",
-  setup() {
-    return {
-      obj: []
-    }
-  },
-  render () {
-    return h('div', { }, 'foo')
-  }
-}
-
+window.a = null
 export default {
   name: "App",
-  setup() {
+  setup(props) {
     return {
       obj: 'mini-vue',
       hg: '哈哈啊哈'
     }
   },
+  props: {
+    mag: '哈哈嘿嘿',
+
+  },
   render() {
-    window.self = this
+    window.a = this
     // 测试单个元素
     // return h("div", { test: 'test'  }, 'ceshi');
 
@@ -48,6 +41,14 @@ export default {
     // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
     // 组件代理 x
     // return h('div', { class: 'red' },  [ h('div', {} , this.obj + this.hg), foo ])
-    return h("div", { test: 'test'  }, [h(Foo)])
+
+    return h("div", {    
+      onClick: () => {
+        console.log('onClick')
+      },
+      onMousedown () {
+        console.log('onMousedown')
+      }
+   }, 'cccccc0' + this.mag )
   },
 };
