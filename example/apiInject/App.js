@@ -1,7 +1,22 @@
 
 import { h } from '../../lib/guide-mini-vue.esm.js'
-window.self = null
-window.a = null
+
+const Foo = {
+  name: "Foo",
+  setup() {
+    return {
+      obj: 'mini-Foo',
+    }
+  },
+  props: {
+    mag: 'Foo',
+  },
+  render() {
+    return h('h1', {}, '我是Foo组件')
+  }
+}
+
+
 export default {
   name: "App",
   setup(props) {
@@ -12,10 +27,9 @@ export default {
   },
   props: {
     mag: '哈哈嘿嘿',
-
   },
   render() {
-    window.a = this
+    console.log(this, '====')
     // 测试单个元素
     // return h("div", { test: 'test'  }, 'ceshi');
 
@@ -33,22 +47,15 @@ export default {
     // ]);
 
     // 测试子元素是组件类型
-    // return h("div", { test: 'test' }, [ h(Foo), h(Foo) , h('span', { class: 'red blue' }, 'opopp')])
+    // return h("div", { test: 'test' }, [ h(Foo, { foo: [{}] }), h(Foo, { foo: [] }) , h('span', { class: 'red blue' }, 'opopp')])
 
     // 添加属性
     // return h("div", { class: 'red blue', id: 'div' }, 'ceshi');
 
     // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
     // 组件代理 x
-    // return h('div', { class: 'red' },  [ h('div', {} , this.obj + this.hg), foo ])
+    // return h('div', { class: 'red' },  [ h('div', {} , 'FOO'), foo ])
+    return h('div', { class: 'red' }, this.hg)
 
-    return h("div", {    
-      onClick: () => {
-        console.log('onClick')
-      },
-      onMousedown () {
-        console.log('onMousedown')
-      }
-   }, 'cccccc0' + this.mag )
   },
 };
