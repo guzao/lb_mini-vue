@@ -1,3 +1,4 @@
+import { PublicInstanceProxyHandlers } from "./componentProps"
 
 /**
  * 实例化在组件
@@ -12,7 +13,9 @@ export function createComponentInstance (vnode: any) {
     /***/
     type: vnode.type,
     /** setup 函数的返回值 */
-    setupState: {}
+    setupState: {},
+    /** 组件挂载的节点 */
+    el: null
   }
   return Component
 
@@ -34,21 +37,14 @@ export function setupComponent (instance: any) {
 
 /**
  * 初始化有状态的组件
+ * @instance 组件实例
 */
 function setupStatefulComponent(instance: any) {
 
   const Component = instance.type
-
-  // 实现组件代理 
-  instance.proxy = new Proxy({}, {
-    get (target, key) {
-      const { setupState } = instance
-      if (key in setupState) {
-        return setupState[key]
-      }
-    },
-  })
-
+ 
+  // 实现组件代理  instance 组件实例
+  instance.proxy = new Proxy({_: instance }, PublicInstanceProxyHandlers)
 
   /**
    * 用户传入的 setup 函数执行后可以得到数据 或视图
@@ -89,7 +85,7 @@ function handleSetupResult(instance, setupResult: any) {
 }
 
 /**
- * 刷新组件
+ * 刷新组件 组件上绑定 render函数
  * @instance 组件实例
 */
 function finishComponentSetup(instance: any) {

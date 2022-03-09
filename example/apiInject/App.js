@@ -1,6 +1,6 @@
 
 import { h } from '../../lib/guide-mini-vue.esm.js'
-
+window.self = null
 const Foo = {
   name: "Foo",
   setup() {
@@ -22,6 +22,7 @@ export default {
     }
   },
   render() {
+    window.self = this
     // 测试单个元素
     // return h("div", { test: 'test'  }, 'ceshi');
 
@@ -44,9 +45,9 @@ export default {
     // 添加属性
     // return h("div", { class: 'red blue', id: 'div' }, 'ceshi');
 
-    const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
-    // 组件代理
-    return h('div', { class: 'red' },  [ h('div', {} , this.obj + this.hg), foo ])
-
+    // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
+    // 组件代理 x
+    // return h('div', { class: 'red' },  [ h('div', {} , this.obj + this.hg), foo ])
+    return h("div", { test: 'test'  }, [h(Foo)])
   },
 };

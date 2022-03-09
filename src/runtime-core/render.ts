@@ -10,11 +10,15 @@ export function render (vnode, container) {
 }
 
 /**
- * 处理subtree
+ * @ 处理subtree
+ * @ 根据vnode.type 区分组件类型 还是element类型 做不同的处理
+ * @ 组件类型    执行 processComponent 
+ * @ element类型 执行 processElement 
  * @vnode  虚拟节点
  * @container  挂载的容器
 */
 function patch(vnode: any, container: any) {
+
   const { type } = vnode
 
 
@@ -48,7 +52,7 @@ function mountElement(vnode: any, container: any) {
 
   const { type, children, props } = vnode
   // 创建元素
-  const el: Element = document.createElement(type)
+  const el: Element =  (vnode.el = document.createElement(type))
 
   // Element
   // 检查children 是否是 字符串
@@ -101,24 +105,26 @@ function mountComponent(vnode: any, container) {
 
   setupComponent(instance)
 
-  setupRenderEffect(instance, container)
+  setupRenderEffect(instance, vnode, container)
 }
 
 /**
  * 开渲染组件
  * @instance 组件实例
+ * @vnode 虚拟节点
  * @container 挂载的容器
 */
-function setupRenderEffect(instance: any, container) {
+function setupRenderEffect(instance: any, vnode, container) {
 
   let { proxy } = instance
-  
   /** 需要渲染的视图 */
   // 将render函数的this执向组件的代理对象
   const subTree = instance.render.call(proxy)
 
   patch(subTree, container)
 
+  // 给组件实例添加挂载元素属性
+  instance.el = subTree.el
 }
 
 
