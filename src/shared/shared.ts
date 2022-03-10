@@ -15,6 +15,13 @@ export function hasChanged (value: any, newValue: any): boolean {
   return !Object.is(value, newValue)
 }
 
+/***
+ * 检测属性是否存在在当前对象上
+ * @value object
+ * @key   属性
+*/
+export const hasOwn = (value, key: string) =>  Object.prototype.hasOwnProperty.call(value, key)
+
 /**
  * 对象合并
 */

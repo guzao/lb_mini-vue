@@ -1,21 +1,37 @@
 
 import { h } from '../../lib/guide-mini-vue.esm.js'
-export default {
-  name: "App",
-  setup(props) {
+
+const Foo = {
+  name: "Foo",
+  setup() {
     return {
-      obj: 'mini-vue',
-      hg: '哈哈啊哈'
+      obj: 'mini-Foo',
     }
   },
   props: {
-    mag: '哈哈嘿嘿',
-
+    mag: 'Foo',
   },
   render() {
-   
+    return h('h1', {}, '我是Foo组件')
+  }
+}
+
+
+export default {
+  name: "App",
+  setup(props) {
+    props.mag = []
+    return {
+      obj: 'mini-vue',
+      hg: 'setup 哈哈啊哈'
+    }
+  },
+  props: {
+    mag: 'props 哈哈嘿嘿',
+  },
+  render() {
     // 测试单个元素
-    return h("div", { test: 'test'  }, 'ceshi');
+    // return h("div", { test: 'test'  }, 'ceshi');
 
     // 测试子元素为数组
     // return h("div", { test: 'test' }, [ h('p', {}, 'p1'), h('p', {}, 'p2'), h('span', {}, 'span') ]);
@@ -31,14 +47,15 @@ export default {
     // ]);
 
     // 测试子元素是组件类型
-    // return h("div", { test: 'test' }, [ h(Foo), h(Foo) , h('span', { class: 'red blue' }, 'opopp')])
+    // return h("div", { test: 'test' }, [ h(Foo, { foo: [{}] }), h(Foo, { foo: [] }) , h('span', { class: 'red blue' }, 'opopp')])
 
     // 添加属性
     // return h("div", { class: 'red blue', id: 'div' }, 'ceshi');
 
     // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
     // 组件代理 x
-    // return h('div', { class: 'red' },  [ h('div', {} , this.obj + this.hg), foo ])
+    // return h('div', { class: 'red' },  [ h('div', {} , 'FOO'), foo ])
+    return h('div', { id: '45' }, this.mag + this.obj)
 
   },
 };

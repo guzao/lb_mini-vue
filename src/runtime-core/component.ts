@@ -1,5 +1,7 @@
+import { shallowReadonly } from "../resctivite";
+import { PublicInstanceProxyHandlers } from "./componentProps";
 import { patch } from "./render";
-import { Component, RootElnemt, VnodeType } from "./vue.dt";
+import { RootElnemt, VnodeType } from "./vue.dt";
 
 
 /**
@@ -49,15 +51,30 @@ export function createComponentInstance(vnode: VnodeType, container: RootElnemt)
 */
 function setupComponent(instance: any) {
   console.log('初始化组件')
+  initProps(instance, instance.type.props)
   setupStatefulComponent(instance)
-
 }
+
+
+
+/**
+ *初始化属性
+*/
+function initProps(instance: any, rawProps: any) {
+  console.log('初始化属性,', rawProps)
+  instance.props = rawProps || {}
+}
+
 
 /**
  * 初始化有状态的组件
  * @instance 组件实例
 */
 function setupStatefulComponent(instance: any) {
+
+
+  instance.proxy = new Proxy({_: instance}, PublicInstanceProxyHandlers)
+
   console.log('初始化有状态的组件')
 
   const Component = instance.type
@@ -66,7 +83,9 @@ function setupStatefulComponent(instance: any) {
   const { setup } = Component
 
   if (setup) {
-    const setupResult = setup()
+    const props = instance.props
+    // 在setup 中可以获取到组件props数据
+    const setupResult = setup(shallowReadonly(props))
     handleSetupResult(instance, setupResult)
   }
 }
@@ -102,15 +121,20 @@ function finishComponentSetup(instance: any) {
 }
 
 /**
- * 
+ * 组件处理完成交给patch
 */
 function setupRenderEffect(instance, vnode, container) {
-  
-  const subTree = instance.render()
 
-  console.log(instance, vnode, container, '组件处理完成交给patch 处理', subTree)
+  const { proxy } = instance
+
+  // 组件代理 proxy组件代理对象
+  const subTree = instance.render.call(proxy)
+
+  console.log(instance, vnode, '组件处理完成交给patch 处理', subTree)
 
   patch(subTree, container)
+  vnode.el = subTree.el
 
 }
+
 
