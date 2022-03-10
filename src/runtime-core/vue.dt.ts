@@ -18,7 +18,5 @@ export type VnodeType = {
   children?: string | Array<Component>
 } 
 
-
-
 /** 虚拟节点挂载的容器 */
 export type RootElnemt = Element | string

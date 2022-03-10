@@ -23,6 +23,15 @@ export function hasChanged (value: any, newValue: any): boolean {
 export const hasOwn = (value, key: string) =>  Object.prototype.hasOwnProperty.call(value, key)
 
 /**
+ * 属性是否是以on开头
+ * @key 属性key'
+*/
+export function isON (key: string) {
+  return /^on[A-Z]/.test(key)
+}
+
+
+/**
  * 对象合并
 */
 export const extend =  Object.assign

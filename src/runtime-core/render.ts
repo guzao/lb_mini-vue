@@ -1,4 +1,4 @@
-import { isArray } from './../shared/shared';
+import { isArray, isON } from './../shared/shared';
 import { isObject } from "../shared/shared";
 import { processComponent } from "./component";
 import { VnodeType, RootElnemt } from "./vue.dt";
@@ -69,10 +69,16 @@ function mountElement(vnode: any, container: any) {
   // 元素属性设置
   for (const key in props) {
     const value = props[key]
-    el.setAttribute(key, value)
+    if (isON(key)) {  // 注册事件
+      const event = key.slice(2).toLocaleLowerCase()
+      el.addEventListener(event, value)
+    } else {           // 添加属性
+      el.setAttribute(key, value)
+    }
   }
   // 生成的节点添加到容器中
   container.append(el)
+
 }
 
 /**

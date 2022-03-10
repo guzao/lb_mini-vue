@@ -55,7 +55,14 @@ export default {
     // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
     // 组件代理 x
     // return h('div', { class: 'red' },  [ h('div', {} , 'FOO'), foo ])
-    return h('div', { id: '45' }, this.mag + this.obj)
+    // return h('div', { id: '45' }, this.mag + this.obj)
+
+
+    return h('h1', {}, [h('button', {
+      onClick () {
+        console.log(this)
+      }
+    }, '点击')])
 
   },
 };
