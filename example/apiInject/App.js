@@ -3,16 +3,21 @@ import { h } from '../../lib/guide-mini-vue.esm.js'
 
 const Foo = {
   name: "Foo",
-  setup() {
+  setup(props, { emit = () => {} }) {
     return {
       obj: 'mini-Foo',
+      emitAdd () {
+        console.log('Fooadd')
+      }
     }
   },
   props: {
     mag: 'Foo',
   },
   render() {
-    return h('h1', {}, '我是Foo组件')
+    return h('h1', {}, [h('button', { 
+      onClick: this.emitAdd
+     }, 'emitAdd')])
   }
 }
 
@@ -20,14 +25,14 @@ const Foo = {
 export default {
   name: "App",
   setup(props) {
-    props.mag = []
     return {
       obj: 'mini-vue',
-      hg: 'setup 哈哈啊哈'
+      hg: '哈哈啊哈'
     }
   },
   props: {
-    mag: 'props 哈哈嘿嘿',
+    mag: '哈哈嘿嘿',
+
   },
   render() {
     // 测试单个元素
@@ -55,14 +60,7 @@ export default {
     // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
     // 组件代理 x
     // return h('div', { class: 'red' },  [ h('div', {} , 'FOO'), foo ])
-    // return h('div', { id: '45' }, this.mag + this.obj)
-
-
-    return h('h1', {}, [h('button', {
-      onClick () {
-        console.log(this)
-      }
-    }, '点击')])
+    return h('div', { class: 'red' }, this.hg + this.obj)
 
   },
 };

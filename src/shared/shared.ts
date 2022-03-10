@@ -32,6 +32,29 @@ export function isON (key: string) {
 
 
 /**
+ * 首字母转大写
+ * @key 英文字母
+*/
+export const capitalize = (key: string): string => {
+  return key.charAt(0).toLocaleUpperCase() + key.slice(1)
+}
+
+/**
+ * add-foo ==>> addFoo 转驼峰写法
+ * @str
+*/
+export const camelize = (str: string) => {
+  return str.replace(/-(\w)/g, (_, c: string) => {
+    return c ? c.toUpperCase() : "";
+  })
+}
+
+export const toHandlerKey = (str: string) => {
+  return str ? "on" + capitalize(str) : "";
+};
+
+
+/**
  * 对象合并
 */
 export const extend =  Object.assign

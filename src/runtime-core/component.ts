@@ -1,5 +1,7 @@
 import { shallowReadonly } from "../resctivite";
-import { PublicInstanceProxyHandlers } from "./componentProps";
+import { emit } from "./componentEmit";
+import { initProps } from "./componentProps";
+import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { patch } from "./render";
 import { RootElnemt, VnodeType } from "./vue.dt";
 
@@ -38,11 +40,19 @@ export function mountComponent(vnode: VnodeType, container: RootElnemt): void {
 */
 export function createComponentInstance(vnode: VnodeType, container: RootElnemt) {
   console.log('创建组件实例')
-  const instance = {
+  const Component = {
     vnode,
     type: vnode.type,
+    setupState: {},
+    props: {},
+    /** emit事件  */
+    emit: () => {}
   }
-  return instance
+
+  /** 通过bind函数使用Component 作为函数的第一个参数 */
+  Component.emit = emit.bind(null, Component)
+  
+  return Component
 }
 
 /**
@@ -51,19 +61,11 @@ export function createComponentInstance(vnode: VnodeType, container: RootElnemt)
 */
 function setupComponent(instance: any) {
   console.log('初始化组件')
-  initProps(instance, instance.type.props)
+  initProps(instance, instance.vnode.props)
   setupStatefulComponent(instance)
 }
 
 
-
-/**
- *初始化属性
-*/
-function initProps(instance: any, rawProps: any) {
-  console.log('初始化属性,', rawProps)
-  instance.props = rawProps || {}
-}
 
 
 /**
@@ -85,7 +87,9 @@ function setupStatefulComponent(instance: any) {
   if (setup) {
     const props = instance.props
     // 在setup 中可以获取到组件props数据
-    const setupResult = setup(shallowReadonly(props))
+    const setupResult = setup(shallowReadonly(props), {
+      emit: instance.emit,
+    })
     handleSetupResult(instance, setupResult)
   }
 }
@@ -101,7 +105,7 @@ function handleSetupResult(instance, setupResult: any) {
   // object
   if (typeof setupResult == 'object') {
     instance.setupState = setupResult
-    console.log(instance, '=====返回值是object 就给组件实例上添加setupState 属性======')
+    console.log('=====返回值是object 就给组件实例上添加setupState 属性======')
   }
 
   finishComponentSetup(instance)
@@ -130,11 +134,12 @@ function setupRenderEffect(instance, vnode, container) {
   // 组件代理 proxy组件代理对象
   const subTree = instance.render.call(proxy)
 
-  console.log(instance, vnode, '组件处理完成交给patch 处理', subTree)
+  console.log('组件处理完成交给patch 处理', subTree)
 
   patch(subTree, container)
   vnode.el = subTree.el
 
 }
+
 
 

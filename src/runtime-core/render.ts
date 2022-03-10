@@ -21,7 +21,7 @@ export function render(vnode: VnodeType, rootContainer: RootElnemt): void {
 export function patch(vnode: VnodeType, container: RootElnemt): void {
   const { type } = vnode
 
-  console.log('根据vnode type 属性区分是组件还是普通元素做不同处理', vnode)
+  console.log('根据vnode type 属性区分是组件还是普通元素做不同处理')
 
   if (typeof type === 'string') {
     // 元素类型
@@ -40,7 +40,7 @@ export function patch(vnode: VnodeType, container: RootElnemt): void {
  * @container 容器
 */
 export function processElement(vnode: VnodeType, container: RootElnemt) {
-  console.log(vnode, '== 处理element 类型 =')
+  console.log('== 处理element 类型 =')
   mountElement(vnode, container)
 }
 
@@ -55,9 +55,6 @@ function mountElement(vnode: any, container: any) {
   const el: Element = (vnode.el = document.createElement(type))
 
   // 元素设置
-  console.log(shapeFlag)
-
-  
   if (shapeFlag & ShapeFlags.TEXT_CHILDREN ) {
     console.log('子元素是字符串 直接设置元素的textContent即可')
     el.textContent = children
@@ -76,6 +73,7 @@ function mountElement(vnode: any, container: any) {
       el.setAttribute(key, value)
     }
   }
+
   // 生成的节点添加到容器中
   container.append(el)
 

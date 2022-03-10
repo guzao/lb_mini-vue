@@ -1,30 +1,9 @@
-import { hasOwn } from "../shared/shared"
-
 /**
- * 
+ *初始化属性
+ *@instance 组件实例
+ *@rawProps  组件Props
 */
-const publicPropertiesMap = {
-  $el: (instance) => instance.vnode.el
-}
-
-/**
- * 组件代理处理函数
-*/
-export const PublicInstanceProxyHandlers = {
-  get ({_: instance}, key: any) {
-
-    const { setupState, props } = instance
-
-    if (hasOwn(setupState, key)) {
-      return setupState[key]
-    } else if (hasOwn(props, key)) {
-      return props[key]
-    }
-
-    const publicGetter = publicPropertiesMap[key];
-    if (publicGetter) {
-      return publicGetter(instance);
-    }
-
-  }
+export function initProps(instance: any, rawProps: any) {
+  console.log('初始化属性,', rawProps)
+  instance.props = rawProps || {}
 }
