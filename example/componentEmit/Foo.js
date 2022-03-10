@@ -23,6 +23,6 @@ export const Foo = {
     );
 
     const foo = h("p", {}, "foo");
-    return h("div", {}, [foo, btn]);
+    return h("div", {}, [foo, btn, h('ul', {}, [h('li', {}, 'klop')])]);
   },
 };

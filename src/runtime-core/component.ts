@@ -2,6 +2,7 @@ import { shallowReadonly } from "../resctivite";
 import { emit } from "./componentEmit";
 import { initProps } from "./componentProps";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
+import { initSlots } from "./componentSlots";
 import { patch } from "./render";
 import { RootElnemt, VnodeType } from "./vue.dt";
 
@@ -45,8 +46,10 @@ export function createComponentInstance(vnode: VnodeType, container: RootElnemt)
     type: vnode.type,
     setupState: {},
     props: {},
+    /** 插槽 */
+    slots: {},
     /** emit事件  */
-    emit: () => {}
+    emit: () => {},
   }
 
   /** 通过bind函数使用Component 作为函数的第一个参数 */
@@ -60,11 +63,16 @@ export function createComponentInstance(vnode: VnodeType, container: RootElnemt)
  * @instance 组件实例
 */
 function setupComponent(instance: any) {
+  
   console.log('初始化组件')
+  
   initProps(instance, instance.vnode.props)
-  setupStatefulComponent(instance)
-}
 
+  initSlots(instance, instance.vnode.children)
+
+  setupStatefulComponent(instance)
+
+}
 
 
 

@@ -6,7 +6,7 @@ import { Component,  VnodeType } from "./vue.dt"
  * @props 属性
  * @children 子元素
 */
-export function createVNode(type: string | object, props?: string | Array<Component>, children?: string | Array<Component| VnodeType>): Component | VnodeType {
+export function createVNode(type: string | object, props?, children?: string | Array<Component| VnodeType>): Component | VnodeType {
   console.log('创建虚拟节点')
   const vnode = {
     type,

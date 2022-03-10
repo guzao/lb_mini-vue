@@ -4,7 +4,8 @@ import { hasOwn } from "../shared/shared"
  * 
 */
 const publicPropertiesMap = {
-  $el: (instance) => instance.vnode.el
+  $el: (instance) => instance.vnode.el,
+  $slots: (instance) => instance.slots,
 }
 
 /**
