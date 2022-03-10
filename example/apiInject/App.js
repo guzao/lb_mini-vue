@@ -1,7 +1,5 @@
 
 import { h } from '../../lib/guide-mini-vue.esm.js'
-window.self = null
-window.a = null
 export default {
   name: "App",
   setup(props) {
@@ -15,9 +13,9 @@ export default {
 
   },
   render() {
-    window.a = this
+   
     // 测试单个元素
-    // return h("div", { test: 'test'  }, 'ceshi');
+    return h("div", { test: 'test'  }, 'ceshi');
 
     // 测试子元素为数组
     // return h("div", { test: 'test' }, [ h('p', {}, 'p1'), h('p', {}, 'p2'), h('span', {}, 'span') ]);
@@ -42,13 +40,5 @@ export default {
     // 组件代理 x
     // return h('div', { class: 'red' },  [ h('div', {} , this.obj + this.hg), foo ])
 
-    return h("div", {    
-      onClick: () => {
-        console.log('onClick')
-      },
-      onMousedown () {
-        console.log('onMousedown')
-      }
-   }, 'cccccc0' + this.mag )
   },
 };
