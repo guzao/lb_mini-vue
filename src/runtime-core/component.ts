@@ -13,7 +13,7 @@ import { RootElnemt, VnodeType } from "./vue.dt";
  * @container 节点挂载的容器
 */
 export function processComponent(vnode: VnodeType, container: RootElnemt): void {
-  console.log('处理组件')
+  console.log('   <<<<<<<<<<<处理组件>>>>>>>>>>>>>')
   mountComponent(vnode, container)
 }
 
@@ -24,10 +24,7 @@ export function processComponent(vnode: VnodeType, container: RootElnemt): void 
  * @container 节点挂载的容器
 */
 export function mountComponent(vnode: VnodeType, container: RootElnemt): void {
-  console.log('挂载组件')
   const instance = createComponentInstance(vnode, container )
-
-  console.log(instance, '=========组件实例======')
 
   setupComponent(instance)
 
@@ -40,7 +37,6 @@ export function mountComponent(vnode: VnodeType, container: RootElnemt): void {
  * @container 节点挂载的容器
 */
 export function createComponentInstance(vnode: VnodeType, container: RootElnemt) {
-  console.log('创建组件实例')
   const Component = {
     vnode,
     type: vnode.type,
@@ -64,8 +60,6 @@ export function createComponentInstance(vnode: VnodeType, container: RootElnemt)
 */
 function setupComponent(instance: any) {
   
-  console.log('初始化组件')
-  
   initProps(instance, instance.vnode.props)
 
   initSlots(instance, instance.vnode.children)
@@ -82,22 +76,21 @@ function setupComponent(instance: any) {
 */
 function setupStatefulComponent(instance: any) {
 
-
   instance.proxy = new Proxy({_: instance}, PublicInstanceProxyHandlers)
-
-  console.log('初始化有状态的组件')
 
   const Component = instance.type
 
   const { setup } = Component
 
   if (setup) {
+    setCurrentInstance(instance)
     const props = instance.props
     // 在setup 中可以获取到组件props数据
     const setupResult = setup(shallowReadonly(props), {
       emit: instance.emit,
     })
     handleSetupResult(instance, setupResult)
+    setCurrentInstance(null)
   }
 }
 
@@ -105,14 +98,12 @@ function setupStatefulComponent(instance: any) {
  * 处理组件返回值
 */
 function handleSetupResult(instance, setupResult: any) {
-  console.log('处理setup函数的返回值')
 
   // TODO function
 
   // object
   if (typeof setupResult == 'object') {
     instance.setupState = setupResult
-    console.log('=====返回值是object 就给组件实例上添加setupState 属性======')
   }
 
   finishComponentSetup(instance)
@@ -128,7 +119,6 @@ function finishComponentSetup(instance: any) {
 
   instance.render = Component.render
 
-  console.log('===确保组件拥有render 函数===')
 }
 
 /**
@@ -141,11 +131,23 @@ function setupRenderEffect(instance, vnode, container) {
   // 组件代理 proxy组件代理对象
   const subTree = instance.render.call(proxy)
 
-  console.log('组件处理完成交给patch 处理', subTree)
+  console.log('      组件处理完成获得subtree 交给patch处理')
 
   patch(subTree, container)
   vnode.el = subTree.el
 
+}
+
+/** 全局变量临时存储 组件实例 */
+let currentInstance = null
+/**
+ * 获得当前组件实例
+*/
+export function getCurrentInstance () {
+  return currentInstance
+}
+function setCurrentInstance (instance) {
+  currentInstance = instance
 }
 
 

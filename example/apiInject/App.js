@@ -1,6 +1,6 @@
 
 import { h } from '../../lib/guide-mini-vue.esm.js'
-
+console.log = () => {}
 const Foo = {
   name: "Foo",
   setup(props, { emit = () => {} }) {
@@ -60,7 +60,18 @@ export default {
     // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
     // 组件代理 x
     // return h('div', { class: 'red' },  [ h('div', {} , 'FOO'), foo ])
-    return h('div', { class: 'red' }, this.hg + this.obj)
+
+    const vnodes = []
+
+    for (let index = 0; index < 100; index++) {
+      vnodes.push(
+        h('li', {}, 'index' + index + 1 )
+      )
+    }
+
+    const foo = h('ul', {}, vnodes)
+
+    return h('div', {  }, [foo])
 
   },
 };

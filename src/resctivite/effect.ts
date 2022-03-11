@@ -145,6 +145,7 @@ export function isTracking (): boolean {
 export function trigger (target: object, key: any) {
 
   let depsMap = targetMap.get(target)
+  if (!depsMap) return
   let dep = depsMap.get(key)
   
   triggerEffects(dep)

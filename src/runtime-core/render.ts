@@ -21,7 +21,7 @@ export function render(vnode: VnodeType, rootContainer: RootElnemt): void {
 export function patch(vnode: any, container: RootElnemt): void {
   const { type, shapeFlag } = vnode
 
-  console.log('根据vnode.shapeFlag 属性区分做不同处理')
+  console.log(' 执行patch')
   
   switch (type) {
 
@@ -54,7 +54,7 @@ export function patch(vnode: any, container: RootElnemt): void {
  * @container 容器
 */
 export function processElement(vnode: VnodeType, container: RootElnemt) {
-  console.log('== 处理element 类型 =')
+  console.log('   处理element类型')
   mountElement(vnode, container)
 }
 
@@ -64,16 +64,14 @@ export function processElement(vnode: VnodeType, container: RootElnemt) {
  * @container 容器
 */
 function mountElement(vnode: any, container: any) {
-  console.log('=== 挂载元素 ===')
+  console.log('        挂载元素')
   const { type, children, props, shapeFlag } = vnode
   const el: Element = (vnode.el = document.createElement(type))
 
   // 元素设置
   if (shapeFlag & ShapeFlags.TEXT_CHILDREN ) {
-    console.log('子元素是字符串 直接设置元素的textContent即可')
     el.textContent = children
   } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
-    console.log('子元素是数组就 循环子元素 调用patch函数 继续处理')
     mountChildren(children, el)
   }
 
@@ -111,6 +109,8 @@ function mountChildren(children: any, el: any): void {
  * @container 容器
 */
 function processFragment (vnode: any, container: any) {
+  console.log('   处理Fragment类型')
+  console.log('       挂载Fragment')
   mountChildren(vnode.children, container)
 }
 
@@ -120,6 +120,8 @@ function processFragment (vnode: any, container: any) {
  * @container 容器
 */
 function processText(vnode: any, container: any ) {
+  console.log('   处理文本节点')
+  console.log('       挂载文本节点')
   let { children } = vnode
   const el = (vnode.el = document.createTextNode(children))
   container.append(el)
