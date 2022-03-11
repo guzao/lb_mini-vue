@@ -6,5 +6,16 @@ import { isArray } from "../shared/shared";
  * @children 组件子元素
 */
 export function initSlots (instance, children) {
-  instance.slots = isArray(children) ? children : [ children ]
+
+  const slots = {}
+
+  for (const key in children) {
+
+    const vnode = children[key]
+    slots[key] = isArray(vnode) ? vnode : [ vnode ]
+    
+  }
+
+  instance.slots = slots
+
 }

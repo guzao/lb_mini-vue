@@ -14,7 +14,13 @@ const foo = {
     // return h('div', {}, [p, h('div', {}, this.$slots)])
 
     // 使用renderSlots辅助函数
-    return h('div', {}, [p, renderSlots(this.$slots)])
+    // return h('div', {}, [p, renderSlots(this.$slots, 'header')])
+
+    // 使用具名插槽 
+    // return h('div', {}, [renderSlots(this.$slots, 'navigator'), renderSlots(this.$slots, 'header'), p,  renderSlots(this.$slots, 'footer')])
+
+    // 作用域插槽
+    return h('div', {}, [renderSlots(this.$slots, 'navigator'), renderSlots(this.$slots, 'header'), p,  renderSlots(this.$slots, 'footer')])
   },
   setup() {
     return {
@@ -30,28 +36,46 @@ export const App = {
     // return h('div', {}, [ h('div', {class: 'red '}, 'App'), h(foo, {}, h('h1', {}, 'h1') ) ])
 
     // 传入数组类型子元素
-    return h(
-      'div',
-      {},
-      [
-        h(
-          'div',
-          { class: 'red ' },
-          'App'
-        ),
-        h(
-          foo
-          , {}
-          ,
-            h(
-              'h1'
-              ,
-              {},
-              'h1'
-            ),
-        )
-      ]
-    )
+    // return h(
+    //   'div',
+    //   {},
+    //   [
+    //     h(
+    //       'div',
+    //       { class: 'red ' },
+    //       'App'
+    //     ),
+    //     h(
+    //       foo
+    //       , {}
+    //       ,
+    //         h(
+    //           'h1'
+    //           ,
+    //           {},
+    //           'h1'
+    //         ),
+    //     )
+    //   ]
+    // )
+
+    // 具名插槽
+    const app = h("div", {}, "App");
+    return h('div', {}, [app, h(foo, {}, {
+      navigator: h('nav', {}, 'nav'),
+      header: h('h1',{}, 'header'),
+      footer: h('h1',{}, 'footer'),
+    })])
+
+    // 作用域插槽
+    // const app = h("div", {}, "App");
+    // const age = 10
+    // return h('div', {}, [app, h(foo, {}, {
+    //   navigator: () =>  h('nav', {}, 'nav'),
+    //   header: () =>  h('h1',{}, 'header' + age ),
+    //   footer: () => h('h1',{}, 'footer'),
+    // })])
+
   },
   setup() {
     return {
