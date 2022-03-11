@@ -5,17 +5,23 @@ import { isArray } from "../shared/shared";
  * @instance 组件实例
  * @children 组件子元素
 */
-export function initSlots (instance, children) {
+export function initSlots (instance, children, ) {
 
   const slots = {}
 
   for (const key in children) {
 
-    const vnode = children[key]
-    slots[key] = isArray(vnode) ? vnode : [ vnode ]
-    
+    const value = children[key]
+
+    slots[key] = (props) => normalizeSlotValue(value(props))
+
   }
 
   instance.slots = slots
 
+}
+
+
+function normalizeSlotValue(value) {
+  return Array.isArray(value) ? value : [value];
 }
