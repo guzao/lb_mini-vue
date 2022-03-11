@@ -1,4 +1,4 @@
-import { h,  } from "../../lib/guide-mini-vue.esm.js";
+import { h, createTextVNode } from "../../lib/guide-mini-vue.esm.js";
 import { Foo } from "./Foo.js";
 
 // Fragment 以及 Text
@@ -13,7 +13,7 @@ export const App = {
       {
         header: ({ age }) => [
           h("p", {}, "header" + age),
-          // createTextVNode("你好呀"),
+          createTextVNode("你好呀"),
         ],
         footer: () => h("p", {}, "footer"),
       }

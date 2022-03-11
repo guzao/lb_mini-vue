@@ -1,12 +1,18 @@
 import { ShapeFlags } from "../shared/ShapeFlages"
 import { Component,  VnodeType } from "./vue.dt"
+
+
+export const Fragment = Symbol("Fragment")
+
+export const Text = Symbol("Text")
+
 /**
  * 创建虚拟节点
  * @type  类型
  * @props 属性
  * @children 子元素
 */
-export function createVNode(type: string | object, props?, children?: string | Array<Component| VnodeType>): Component | VnodeType {
+export function createVNode(type: string | object | any, props?, children?: string | Array<Component| VnodeType>): Component | VnodeType {
   console.log('创建虚拟节点')
   const vnode = {
     type,
@@ -24,12 +30,25 @@ export function createVNode(type: string | object, props?, children?: string | A
     vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN;
   }
 
+  /** 标识是否插槽类型 */
+  if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+    if (typeof children === "object") {
+      vnode.shapeFlag |= ShapeFlags.SLOT_CHILDREN;
+    }
+  }
+
   return vnode
   
 }
+
 
 function getShapeFlag(type) {
   return typeof type === 'string' 
   ? ShapeFlags.ELEMENT
   : ShapeFlags.STATEFUL_COMPONENT
+}
+
+
+export function createTextVNode (str: string){
+  return createVNode(Text, {}, str)
 }

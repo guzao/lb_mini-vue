@@ -1,8 +1,8 @@
-import { isArray, isON } from './../shared/shared';
-import { isObject } from "../shared/shared";
+import { isON } from './../shared/shared';
 import { processComponent } from "./component";
 import { VnodeType, RootElnemt } from "./vue.dt";
 import { ShapeFlags } from '../shared/ShapeFlages';
+import { Fragment, Text } from './vnode';
 
 /**
  * @vnode  虚拟节点 | 组件
@@ -18,18 +18,32 @@ export function render(vnode: VnodeType, rootContainer: RootElnemt): void {
  * @vnode 虚拟节点
  * @rootContainer 挂载容器
 */
-export function patch(vnode: VnodeType, container: RootElnemt): void {
-  const { type } = vnode
+export function patch(vnode: any, container: RootElnemt): void {
+  const { type, shapeFlag } = vnode
 
-  console.log('根据vnode type 属性区分是组件还是普通元素做不同处理')
+  console.log('根据vnode.shapeFlag 属性区分做不同处理')
+  
+  switch (type) {
 
-  if (typeof type === 'string') {
-    // 元素类型
-    processElement(vnode, container)
-  } else if (isObject(type)) {
-    // 组件类型
-    processComponent(vnode, container)
+    case Fragment:
+      processFragment(vnode, container)
+      break;
+    case Text:
+      processText(vnode, container)
+      break;
+    
+    default:
+      if (shapeFlag & ShapeFlags.ELEMENT) {
+        // 元素类型
+        processElement(vnode, container)
+      } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+        // 组件类型
+        processComponent(vnode, container)
+      }
+      break;
   }
+  
+  
 
 
 }
@@ -90,3 +104,23 @@ function mountChildren(children: any, el: any): void {
   })
 }
 
+
+/**
+ * 处理 Fragment 类型
+ * @vnode 虚拟节点
+ * @container 容器
+*/
+function processFragment (vnode: any, container: any) {
+  mountChildren(vnode.children, container)
+}
+
+/**
+ * 处理文本节点
+ * @vnode 虚拟节点
+ * @container 容器
+*/
+function processText(vnode: any, container: any ) {
+  let { children } = vnode
+  const el = (vnode.el = document.createTextNode(children))
+  container.append(el)
+}

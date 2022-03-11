@@ -1,4 +1,4 @@
-import { createVNode } from "../vnode";
+import { createVNode, Fragment } from "../vnode";
 
 /**
  * 渲染插槽
@@ -12,7 +12,7 @@ export function renderSlots (slots, slotNmae: string, props? ) {
   const slot = slots[slotNmae]
   if (slot) {
     if (typeof slot == 'function') {
-      return createVNode('div', {}, slot(props))
+      return createVNode(Fragment, {}, slot(props))
     }
   }
 

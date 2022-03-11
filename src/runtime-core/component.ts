@@ -27,7 +27,7 @@ export function mountComponent(vnode: VnodeType, container: RootElnemt): void {
   console.log('挂载组件')
   const instance = createComponentInstance(vnode, container )
 
-  console.log(instance,'=========组件实例======')
+  console.log(instance, '=========组件实例======')
 
   setupComponent(instance)
 
@@ -88,7 +88,6 @@ function setupStatefulComponent(instance: any) {
   console.log('初始化有状态的组件')
 
   const Component = instance.type
-  console.log(Component, instance, '组件实例')
 
   const { setup } = Component
 
@@ -106,7 +105,7 @@ function setupStatefulComponent(instance: any) {
  * 处理组件返回值
 */
 function handleSetupResult(instance, setupResult: any) {
-  console.log('处理setup函数的返回值', setupResult)
+  console.log('处理setup函数的返回值')
 
   // TODO function
 
@@ -129,7 +128,7 @@ function finishComponentSetup(instance: any) {
 
   instance.render = Component.render
 
-  console.log(instance, '===确保组件拥有render 函数===')
+  console.log('===确保组件拥有render 函数===')
 }
 
 /**

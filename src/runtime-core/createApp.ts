@@ -13,12 +13,14 @@ export function createApp (rootComponent: Component) {
 
     /** 挂载应用 */
     mount (rootContainer: RootElnemt) {
+      
       console.log('挂载应用')
+
       /**
        * 虚拟节点
       */
       const vnode = createVNode(rootComponent)
-      console.log(vnode, 'vnode, ========= 虚拟节点 ========')
+
       /**
        * 基于虚拟节点执行后续操作
       */
