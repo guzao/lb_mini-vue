@@ -36,12 +36,19 @@ export function mountComponent(vnode: VnodeType, container: RootElnemt): void {
  * @vnode 虚拟节点
  * @container 节点挂载的容器
 */
-export function createComponentInstance(vnode: VnodeType, container: RootElnemt) {
+export function createComponentInstance(vnode: VnodeType, parent: any) {
+  console.log(vnode)
   const Component = {
+    /** 虚拟节点 */ 
     vnode,
+    /** 组件类型 */
     type: vnode.type,
+    /** 组件内部数据 */
     setupState: {},
+    /** 组件属性 */ 
     props: {},
+    /** 依赖注入 提供给子组件使用 */ 
+    provides: {},
     /** 插槽 */
     slots: {},
     /** emit事件  */
