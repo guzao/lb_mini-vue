@@ -113,7 +113,7 @@ function handleSetupResult(instance, setupResult: any) {
   // object
   if (typeof setupResult == 'object') {
     instance.setupState = setupResult
-    console.log('=====返回值是object 就给组件实例上添加setupState 属性======')
+    console.log('=====返回值是object 就给组件实例上添加setupState 属性====   [git]  ==')
   }
 
   finishComponentSetup(instance)
