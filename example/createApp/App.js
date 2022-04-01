@@ -1,77 +1,34 @@
 
 import { h } from '../../lib/guide-mini-vue.esm.js'
-console.log = () => {}
-const Foo = {
-  name: "Foo",
-  setup(props, { emit = () => {} }) {
-    return {
-      obj: 'mini-Foo',
-      emitAdd () {
-        console.log('Fooadd')
-      }
-    }
-  },
-  props: {
-    mag: 'Foo',
-  },
-  render() {
-    return h('h1', {}, [h('button', { 
-      onClick: this.emitAdd
-     }, 'emitAdd')])
-  }
-}
-
-
+window.self = null
 export default {
   name: "App",
   setup(props) {
     return {
-      obj: 'mini-vue',
-      hg: '哈哈啊哈'
+      msg: '哈哈啊哈',
+      jk: '测试组件代理对象'
     }
   },
   props: {
     mag: '哈哈嘿嘿',
-
   },
   render() {
+    window.self = this
     // 测试单个元素
-    // return h("div", { test: 'test'  }, 'ceshi');
+    // return h("div", 
+    // { id: '45', class: 'red'  }, 
+    //   [ 
+    //     h('div', { id: 'op1' }, '我是div1'), 
+    //     h('div', { id: 'op2' }, '我是div2'), 
+    //     h('div', { id: 'op3' }, '我是div3')
+    //   ]
+    // );
 
-    // 测试子元素为数组
-    // return h("div", { test: 'test' }, [ h('p', {}, 'p1'), h('p', {}, 'p2'), h('span', {}, 'span') ]);
+    // 测试组件代理对象
+    return h('div', {  }, 'hi' + this.msg + this.jk )
+    
 
-    // 测试多层嵌套
-    // return h("div", { test: 'test'  }, [
-    //   h('ul', {}, [
-    //     h('li', {}, [
-    //       h('span', {},'span1'),
-    //       h('span', {},'span2')
-    //     ])
-    //   ])
-    // ]);
-
-    // 测试子元素是组件类型
-    // return h("div", { test: 'test' }, [ h(Foo, { foo: [{}] }), h(Foo, { foo: [] }) , h('span', { class: 'red blue' }, 'opopp')])
-
-    // 添加属性
-    // return h("div", { class: 'red blue', id: 'div' }, 'ceshi');
-
-    // const foo = h('h2', { style: 'font-size: 45px' }, '我是H2')
-    // 组件代理 x
-    // return h('div', { class: 'red' },  [ h('div', {} , 'FOO'), foo ])
-
-    const vnodes = []
-
-    for (let index = 0; index < 100; index++) {
-      vnodes.push(
-        h('li', {}, 'index' + index + 1 )
-      )
-    }
-
-    const foo = h('ul', {}, vnodes)
-
-    return h('div', {  }, [foo])
-
+    // 测试 $el
+    // return h('div', {  }, 'hi' + this.msg)
   },
 };

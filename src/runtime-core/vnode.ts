@@ -1,53 +1,13 @@
-import { ShapeFlags } from "../shared/ShapeFlages"
-import { Component,  VnodeType } from "./vue.dt"
-
-
-export const Fragment = Symbol("Fragment")
-
-export const Text = Symbol("Text")
-
-/**
- * 创建虚拟节点
- * @type  类型
- * @props 属性
- * @children 子元素
-*/
-export function createVNode(type: string | object | any, props?, children?: string | Array<Component| VnodeType>): Component | VnodeType {
+export function createVNode(type: any, props?: object, children?){
   const vnode = {
-    type,
+    /**根据这个值判断 这个虚拟节点是组件还是 elemnt 类型 */
+    type: type,
+    /** 属性 */
     props,
+    /** 子元素 */
     children,
+    /** 虚拟节点挂载的元素 */
     el: null,
-    /** 标识组件类型  */
-    shapeFlag: getShapeFlag(type)
   }
-
-  /** 标识子元素类型 */
-  if (typeof children === "string") {
-    vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN;
-  } else if (Array.isArray(children)) {
-    vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN;
-  }
-
-  /** 标识是否插槽类型 */
-  if (vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
-    if (typeof children === "object") {
-      vnode.shapeFlag |= ShapeFlags.SLOT_CHILDREN;
-    }
-  }
-
   return vnode
-  
-}
-
-
-function getShapeFlag(type) {
-  return typeof type === 'string' 
-  ? ShapeFlags.ELEMENT
-  : ShapeFlags.STATEFUL_COMPONENT
-}
-
-
-export function createTextVNode (str: string){
-  return createVNode(Text, {}, str)
 }

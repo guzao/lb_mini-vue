@@ -1,31 +1,18 @@
 import { render } from "./render"
 import { createVNode } from "./vnode"
-import { Component, RootElnemt } from "./vue.dt"
 
-
-/**
- * 初始化应用
- * @rootComponent 根组件
-*/
-export function createApp (rootComponent: Component) {
-  
+export function createApp (rootComponent: any) {
   return {
-
-    /** 挂载应用 */
-    mount (rootContainer: RootElnemt) {
-
-      /**
-       * 虚拟节点
-      */
+    mount (rootContainer: Element) {
+      // 
       const vnode = createVNode(rootComponent)
 
-      /**
-       * 基于虚拟节点执行后续操作
-      */
+      // 
       render(vnode, rootContainer)
     }
-
   }
 }
+
+
 
 

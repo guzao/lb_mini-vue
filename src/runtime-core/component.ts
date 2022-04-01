@@ -1,161 +1,55 @@
-import { shallowReadonly } from "../resctivite";
-import { emit } from "./componentEmit";
-import { initProps } from "./componentProps";
-import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
-import { initSlots } from "./componentSlots";
-import { patch } from "./render";
-import { RootElnemt, VnodeType } from "./vue.dt";
+import { isObject } from "../shared/shared"
+import { PublicInstanceProxyHandlers } from "./componentPublicInstance"
 
-
-/**
- * 处理组件
- * @vnode 虚拟节点
- * @container 节点挂载的容器
-*/
-export function processComponent(vnode: VnodeType, container: RootElnemt): void {
-  console.log('   <<<<<<<<<<<处理组件>>>>>>>>>>>>>')
-  mountComponent(vnode, container)
-}
-
-
-/**
- * 挂载组件
- * @vnode 虚拟节点
- * @container 节点挂载的容器
-*/
-export function mountComponent(vnode: VnodeType, container: RootElnemt): void {
-  const instance = createComponentInstance(vnode, container )
-
-  setupComponent(instance)
-
-  setupRenderEffect(instance, vnode, container)
-}
-
-/**
- * 创建组件实例
- * @vnode 虚拟节点
- * @container 节点挂载的容器
-*/
-export function createComponentInstance(vnode: VnodeType, parent: any) {
-  console.log(vnode)
-  const Component = {
-    /** 虚拟节点 */ 
+export function createComponentInstance(vnode: any) {
+  const component = {
     vnode,
-    /** 组件类型 */
     type: vnode.type,
-    /** 组件内部数据 */
-    setupState: {},
-    /** 组件属性 */ 
     props: {},
-    /** 依赖注入 提供给子组件使用 */ 
-    provides: {},
-    /** 插槽 */
-    slots: {},
-    /** emit事件  */
-    emit: () => {},
-  }
-
-  /** 通过bind函数使用Component 作为函数的第一个参数 */
-  Component.emit = emit.bind(null, Component)
-  
-  return Component
+    /** 组件setup 返回的数据 */ 
+    setupState: {},
+    /** 组件代理对象 方便用户 直接通过 this.xxx 访问组件的数据 */
+    proxy: null,
+  }  
+  return component
 }
 
-/**
- * 初始化组件
- * @instance 组件实例
-*/
-function setupComponent(instance: any) {
-  
-  initProps(instance, instance.vnode.props)
+ 
+export function setupComponent(instance: any) {
+  // 初始化属性
 
-  initSlots(instance, instance.vnode.children)
+  // 初始化插槽
 
+  // 设置组件渲染函数
   setupStatefulComponent(instance)
-
 }
 
-
-
-/**
- * 初始化有状态的组件
- * @instance 组件实例
-*/
 function setupStatefulComponent(instance: any) {
-
-  instance.proxy = new Proxy({_: instance}, PublicInstanceProxyHandlers)
-
+  /** 组件 */ 
   const Component = instance.type
-
+  
   const { setup } = Component
 
+  // 创建组件的代理对象
+  instance.proxy = new Proxy({_: instance}, PublicInstanceProxyHandlers)
+  
   if (setup) {
-    setCurrentInstance(instance)
-    const props = instance.props
-    // 在setup 中可以获取到组件props数据
-    const setupResult = setup(shallowReadonly(props), {
-      emit: instance.emit,
-    })
+    let setupResult = setup()
     handleSetupResult(instance, setupResult)
-    setCurrentInstance(null)
   }
 }
+function handleSetupResult(instance: any, setupResult: any) {
 
-/**
- * 处理组件返回值
-*/
-function handleSetupResult(instance, setupResult: any) {
-
-  // TODO function
-
-  // object
-  if (typeof setupResult == 'object') {
+  if (isObject(setupResult)) {
     instance.setupState = setupResult
+  } else {
   }
 
   finishComponentSetup(instance)
-
 }
 
-/**
- * 确保组件拥有render 函数
- * @instance 组件实例
-*/
 function finishComponentSetup(instance: any) {
   const Component = instance.type
-
   instance.render = Component.render
-
 }
-
-/**
- * 组件处理完成交给patch
-*/
-function setupRenderEffect(instance, vnode, container) {
-
-  const { proxy } = instance
-
-  // 组件代理 proxy组件代理对象
-  const subTree = instance.render.call(proxy)
-
-  console.log('      组件处理完成获得subtree 交给patch处理')
-
-  patch(subTree, container)
-  vnode.el = subTree.el
-
-}
-
-/** 全局变量临时存储 组件实例 */
-let currentInstance = null
-/**
- * 获得当前组件实例
-*/
-export function getCurrentInstance () {
-  return currentInstance
-}
-function setCurrentInstance (instance) {
-  currentInstance = instance
-}
-
-
 
