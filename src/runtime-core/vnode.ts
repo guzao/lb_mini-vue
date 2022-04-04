@@ -1,5 +1,8 @@
 import { ShapeFlages } from "../shared/ShapeFlages"
-import { isArray, isObject } from "../shared/shared"
+import { isArray } from "../shared/shared"
+import { h } from "./h"
+export const Fragment  = Symbol('Fragment')
+export const Text  = Symbol('Text')
 
 export function createVNode(type: any, props?: object, children?){
   const vnode = {
@@ -36,4 +39,9 @@ function updateVnodeShapeFlag (vnode, children) {
       vnode.shapeflag |= ShapeFlages.SLOTS_CHILDREN
     }
   }
+}
+
+/** 创建文本虚拟节点 */
+export function createTextVNode (children: string) {
+  return h(Text, {}, children)
 }

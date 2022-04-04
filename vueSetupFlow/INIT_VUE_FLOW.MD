@@ -1,6 +1,6 @@
 
 ## mini-ve 执行顺序
-- 
+
 ```js
 createrApp(rootComponent)
 .mount(container) // mount中开始执行 createVNode 和 render
@@ -26,6 +26,13 @@ createrApp(rootComponent)
 
                     // 设置组件的属性、插槽、render函数
                     ==> setupComponent(instance)
+                      // 属性
+                      ==> initProps(....)
+                        ==> 
+                      // 插槽
+                      ==> initSlots(....)
+                        ==> normalizeObjectSlots(children, instance.slots)
+                           ==> normalizeSlotValue()
 
                       ==> setupStatefulComponent(instance) // 初始化有状态的组件
 
@@ -51,6 +58,7 @@ createrApp(rootComponent)
 
 
 ## 使用位运算标识组件类型
+
 ```js
   // 
   // 元素类型
@@ -108,3 +116,94 @@ createrApp(rootComponent)
    ==> updateVnodeShapeFlag(vnode, children)
 ```
 
+
+## 获取组件实例
+
+```js
+// 这个函数只能在setup中调用
+// 
+
+/** 临时存储组件的实例 */ 
+let currentInstance = null
+/** 初始化有状态的组件的 调用组件的 */
+function setupStatefulComponent(instance: any) {
+  /** 组件 */ 
+  const Component = instance.type
+  
+  const { setup } = Component
+
+  // 创建组件的代理对象
+  instance.proxy = new Proxy({_: instance}, PublicInstanceProxyHandlers)
+  
+  if (setup) {
+    setCurrentInstance(instance)
+    let setupResult = setup(shallowReadonly(instance.props), {
+      emit: instance.emit
+    })
+    setCurrentInstance(null)
+    handleSetupResult(instance, setupResult)
+  }
+}
+
+/**
+ * 获取当前组件的实例
+ * 函数会在创建组件实例的时候执行 
+*/
+export function getCurrentInstance () {
+  return currentInstance
+}
+
+/**
+ * 通过这个函数修改 组件的实例
+*/
+function setCurrentInstance (value) {
+  currentInstance = value
+}
+```
+
+
+## 依赖注入  provide inject
+- 父组件通过 provide 注入数据 后代组件可以通过provide 获取
+- 子组件访问父组件的 provides 数据
+#### provide
+```js
+export function provide (key: string, value: any) {
+  const currentInstance = getCurrentInstance()
+  // 当前组件的provides  ==> 初始化时指向了父组件的provides 
+  if (currentInstance) {
+    let { provides } = currentInstance
+    let parentProvides = currentInstance.parent.provides
+    // 初始化的时候 当前组件的provides 指向了 组组件的provides
+    // 每次执行Object.create 的时候相当于重置了 当前的组件的provides.propotye 所以只需要初始化一次即可
+    if (provides == parentProvides) {
+      // 将当前组件的 provides的原型指向父组件的 provides
+      provides = currentInstance.provides = Object.create(parentProvides)
+    }
+    provides[key] = value
+  }
+}
+```
+
+
+#### inject
+```js
+/**
+ * * @defaultValue 默认参数 也可以是函数
+*/
+export function inject (key: string, defaultValue: any) {
+  const currentInstance = getCurrentInstance()
+  if (currentInstance) {
+    const { provides } = currentInstance
+    if (key in provides) {
+      return provides[key]
+    } else {
+      if (defaultValue) {
+        if (typeof defaultValue === 'function') {
+          return defaultValue()
+        }
+        return defaultValue
+      }
+    }
+  }
+}
+```

@@ -37,7 +37,6 @@ const Consumer = {
     const bar = inject("bar");
     // const baz = inject("baz", "bazDefault");
     const baz = inject("baz", () => "bazDefault");
-
     return {
       foo,
       bar,
@@ -49,6 +48,8 @@ const Consumer = {
     return h("div", {}, `Consumer: - ${this.foo} - ${this.bar}-${this.baz}`);
   },
 };
+
+
 
 export default {
   name: "App",

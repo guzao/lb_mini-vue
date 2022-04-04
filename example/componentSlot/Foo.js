@@ -7,6 +7,6 @@ export const Foo = {
   render() {
     const count = 1
     const foo = h("p", {}, "foo");
-    return h("div", {}, [ renderSlots(this.$slots, 'header', { count }), foo, renderSlots(this.$slots, 'footer')]);
+    return h("div", {}, [renderSlots(this.$slots,'hj') ,renderSlots(this.$slots, 'header', { count }), foo, renderSlots(this.$slots, 'footer')]);
   },
 };

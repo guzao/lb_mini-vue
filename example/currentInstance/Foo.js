@@ -3,11 +3,14 @@ import { h, getCurrentInstance } from "../../lib/guide-mini-vue.esm.js";
 export const Foo = {
   name:"Foo",
   setup() {
-    const instance = getCurrentInstance();
-    console.log("Foo:", instance);
-    return {};
+    let instance = getCurrentInstance()
+    return {
+      text: instance.vnode.shapeflag,
+      ...instance
+    }
   },
   render() {
-    return h("div", {}, "foo");
+    console.log(this)
+    return h("div", {}, "foo" + this.text);
   },
 };

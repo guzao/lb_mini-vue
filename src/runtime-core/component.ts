@@ -5,7 +5,12 @@ import { initProps } from "./componentProps"
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance"
 import { initSlots } from "./componentSlots"
 
-export function createComponentInstance(vnode: any) {
+/** 临时存储组件的实例 */ 
+let currentInstance = null
+
+
+/** 创建组件实例 将vnoe 上的数据 经过处理添加到 组件上 */
+export function createComponentInstance(vnode: any, parent) {
   const component = {
     /** 虚拟节点 */
     vnode,
@@ -20,14 +25,17 @@ export function createComponentInstance(vnode: any) {
     /** 组件emit 事件 */
     emit: () => {},
     /** 组件的插槽 */
-    slots: []
+    slots: [],
+    /** 当前组件的依赖注入 */
+    provides: parent ? parent.provides : {},
+    parent,
   }  
   /** 重写emit方法 将参数1传入emit内 */
   component.emit = emit.bind(null, component)
   return component
 }
 
- 
+/** 初始化组件 初始化对应的 props  slots  初始化渲染函数 */
 export function setupComponent(instance: any) {
   // 初始化属性
   initProps(instance, instance.vnode.props)
@@ -39,6 +47,7 @@ export function setupComponent(instance: any) {
   setupStatefulComponent(instance)
 }
 
+/** 初始化有状态的组件的 调用组件的 */
 function setupStatefulComponent(instance: any) {
   /** 组件 */ 
   const Component = instance.type
@@ -49,11 +58,11 @@ function setupStatefulComponent(instance: any) {
   instance.proxy = new Proxy({_: instance}, PublicInstanceProxyHandlers)
   
   if (setup) {
-    
+    setCurrentInstance(instance)
     let setupResult = setup(shallowReadonly(instance.props), {
       emit: instance.emit
     })
-
+    setCurrentInstance(null)
     handleSetupResult(instance, setupResult)
   }
 }
@@ -71,5 +80,20 @@ function finishComponentSetup(instance: any) {
   instance.render = Component.render
 }
 
+
+/**
+ * 获取当前组件的实例
+ * 函数会在创建组件实例的时候执行 
+*/
+export function getCurrentInstance () {
+  return currentInstance
+}
+
+/**
+ * 通过这个函数修改 组件的实例
+*/
+function setCurrentInstance (value) {
+  currentInstance = value
+}
 
 

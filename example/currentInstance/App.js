@@ -6,9 +6,7 @@ export const App = {
   render() {
     return h("div", {}, [h("p", {}, "currentInstance demo"), h(Foo)]);
   },
-
   setup() {
-    const instance = getCurrentInstance();
-    console.log("App:", instance);
+    console.log(getCurrentInstance())
   },
 };
