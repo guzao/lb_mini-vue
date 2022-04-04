@@ -1,4 +1,4 @@
-import { h, createTextVNode } from "../../lib/guide-mini-vue.esm.js";
+import { h } from "../../lib/guide-mini-vue.esm.js";
 import { Foo } from "./Foo.js";
 
 // Fragment 以及 Text
@@ -6,20 +6,24 @@ export const App = {
   name: "App",
   render() {
     const app = h("div", {}, "App");
-    // object key
-    const foo = h(
-      Foo,
-      {},
-      {
-        header: ({ age }) => [
-          h("p", {}, "header" + age),
-          createTextVNode("你好呀"),
-        ],
-        footer: () => h("p", {}, "footer"),
-      }
-    );
-    // 数组 vnode
-    // const foo = h(Foo, {}, h("p", {}, "123"));
+
+    const header = (props) => {
+      return h('div', {}, 'header' + props.count)
+    } 
+    const footer = (props) =>  h('div', {}, 'footer')
+
+    // 单个节点
+    // const foo = h(Foo, {}, header );
+    // 支持传入数组
+    // const foo = h(Foo, {}, [header, footer] )
+    
+    // 实现具名插槽
+    // 作用域插槽
+    const foo = h(Foo, {}, {
+      footer: footer,
+      header: header
+    });
+
     return h("div", {}, [app, foo]);
   },
 
