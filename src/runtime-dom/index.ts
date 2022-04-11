@@ -9,17 +9,28 @@ function createElement(type) {
   return document.createElement(type)
 }
 
-function patchProp(el, key, value) {
+function patchProp(el: Element, key, prevValue, newValue) {
   if (isOn(key)) {
     let event = getEventName(key)
-    el.addEventListener(event, value)
+    el.addEventListener(event, newValue)
   } else {
-    el.setAttribute(key, value)
+    el.setAttribute(key, newValue)
   }
+  // 新得是 null || undefined 删除属性
+  if (newValue == null || newValue == undefined) {
+    el.removeAttribute(key)
+  }
+  
 }
 
-function insert (el, parent) {
-  parent.append(el)
+function insert (el: Element, parent: Element, anchor) {
+  // parent.append(el)
+  parent.insertBefore(el, anchor || null)
+}
+
+
+function removeElement (el) {
+  el.parentNode.removeChild(el)
 }
 
 function setElementText (el, text) {
@@ -30,7 +41,8 @@ const renderer: any = createRenderer({
   createElement,
   patchProp,
   insert,
-  setElementText
+  setElementText,
+  removeElement
 })
 
 export function createApp(...args) {

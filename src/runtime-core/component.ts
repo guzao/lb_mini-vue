@@ -1,4 +1,5 @@
-import { shallowReadonly } from "../resctivite"
+import { proxyRefs } from "../resctivite"
+import { shallowReadonly } from "../resctivite/reactive"
 import { isObject } from "../shared/shared"
 import { emit } from "./componentEmit"
 import { initProps } from "./componentProps"
@@ -12,9 +13,11 @@ let currentInstance = null
 /** 创建组件实例 将vnoe 上的数据 经过处理添加到 组件上 */
 export function createComponentInstance(vnode: any, parent) {
   const component = {
+    /** 组件是否已经被挂载过 */
+    isMounted: false,
     /** 虚拟节点 */
     vnode,
-    
+    /**  */
     type: vnode.type,
     /** 组件的属性 */
     props: {},
@@ -28,6 +31,7 @@ export function createComponentInstance(vnode: any, parent) {
     slots: [],
     /** 当前组件的依赖注入 */
     provides: parent ? parent.provides : {},
+    /** 当前组件得父级组件 */
     parent,
   }  
   /** 重写emit方法 将参数1传入emit内 */
@@ -69,7 +73,7 @@ function setupStatefulComponent(instance: any) {
 
 function handleSetupResult(instance: any, setupResult: any) {
   if (isObject(setupResult)) {
-    instance.setupState = setupResult
+    instance.setupState = proxyRefs(setupResult)
   } else {
   }
   finishComponentSetup(instance)

@@ -4,7 +4,7 @@ import { h } from "./h"
 export const Fragment  = Symbol('Fragment')
 export const Text  = Symbol('Text')
 
-export function createVNode(type: any, props?: object, children?){
+export function createVNode(type: any, props?, children?){
   const vnode = {
     /**根据这个值判断 这个虚拟节点是组件还是 elemnt 类型 */
     type: type,
@@ -14,7 +14,8 @@ export function createVNode(type: any, props?: object, children?){
     children,
     /** 虚拟节点挂载的元素 */
     el: null,
-    shapeflag: getShapeFlag(type)
+    shapeflag: getShapeFlag(type),
+    key: props && props.key
   }
 
   // 继续判断children 是数组类型 还是 string 类型 设置shapeflag
