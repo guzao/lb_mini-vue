@@ -1,1 +1,2 @@
-export * from "./runtime-core"
+export * from './resctivite'
+export * from './runtime-dom'

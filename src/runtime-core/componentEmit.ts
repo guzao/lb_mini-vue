@@ -1,17 +1,22 @@
-import { camelize, toHandlerKey } from "../shared/shared";
+function capitalize (str: string): string {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''
+}
+function camelize (str: string) {
+  return str.replace(/-(\w)/g, (_, s: string)=> {
+    return s ? s.toUpperCase() : ''
+  })
+}
+function toHandelKey(str: string) {
+  return str ? 'on' +  camelize(str) : ''
+}
 
-/**
- * emit
- * @ 组件实例通过bind函数已经将instance参数填充完成 调用时直接传入事件名称即可
-*/
-export function emit (instance, event, ...args: any [] /** 事件触发传入的参数 */){
+export function emit (instance, event: string, ...args) {
 
   const { props } = instance
 
-  const handlerName = toHandlerKey(camelize(event))
+  let handelKey =  toHandelKey(capitalize(event))
 
-  const handler = props[handlerName]
+  let handle = props[handelKey]
 
-  handler && handler(...args)
-
+  handle && handle(...args)
 }

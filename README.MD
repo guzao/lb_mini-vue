@@ -6,6 +6,10 @@
 - 5 yarn add --dev babel-jest @babel/core @babel/preset-env 
 - yarn add --dev @babel/preset-typescript  添加babel.config.js文件配置
 
+<<<<<<< HEAD
 - [✓] 数据响应式功能已实现
 - [x]  虚拟节点转dom元素
 - [x]  虚拟节点diff 计算差异化更新
+=======
+- [x] 数据响应式功能已实现
+>>>>>>> lb-dev

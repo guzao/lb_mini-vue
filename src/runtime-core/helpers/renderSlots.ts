@@ -1,15 +1,9 @@
-import { createVNode } from "../vnode";
-
-/**
- * 渲染插槽
- * @slots 插槽
- * @slotNmae 插槽名称
-*/
-export function renderSlots (slots, slotNmae: string) {
-
-  // 获取指定子元素
-  const currentSlot = slots[slotNmae]
-  
-  return createVNode('div', {}, currentSlot)
-
+import { createVNode, Fragment } from "../vnode";
+export function renderSlots (slots: any, name: string, props) {
+  let slot = slots[name]
+  if (slot) {
+    if (typeof slot === 'function') {
+      return createVNode(Fragment, {}, slot(props))
+    }
+  }
 }

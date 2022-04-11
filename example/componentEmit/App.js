@@ -20,7 +20,8 @@ const foo = {
     // return h('div', {}, [renderSlots(this.$slots, 'navigator'), renderSlots(this.$slots, 'header'), p,  renderSlots(this.$slots, 'footer')])
 
     // 作用域插槽
-    return h('div', {}, [renderSlots(this.$slots, 'navigator'), renderSlots(this.$slots, 'header'), p,  renderSlots(this.$slots, 'footer')])
+    const age = 40
+    return h('div', {}, [renderSlots(this.$slots, 'navigator', { age }), renderSlots(this.$slots, 'header'), p,  renderSlots(this.$slots, 'footer')])
   },
   setup() {
     return {
@@ -60,21 +61,20 @@ export const App = {
     // )
 
     // 具名插槽
-    const app = h("div", {}, "App");
-    return h('div', {}, [app, h(foo, {}, {
-      navigator: h('nav', {}, 'nav'),
-      header: h('h1',{}, 'header'),
-      footer: h('h1',{}, 'footer'),
-    })])
+    // const app = h("div", {}, "App");
+    // return h('div', {}, [app, h(foo, {}, {
+    //   navigator: h('nav', {}, 'nav'),
+    //   header: h('h1',{}, 'header'),
+    //   footer: h('h1',{}, 'footer'),
+    // })])
 
     // 作用域插槽
-    // const app = h("div", {}, "App");
-    // const age = 10
-    // return h('div', {}, [app, h(foo, {}, {
-    //   navigator: () =>  h('nav', {}, 'nav'),
-    //   header: () =>  h('h1',{}, 'header' + age ),
-    //   footer: () => h('h1',{}, 'footer'),
-    // })])
+    const app = h("div", {}, "App");
+    return h('div', {}, [app, h(foo, {}, {
+      navigator: ({ age }) =>  h('nav', {}, 'nav' + age),
+      header: () =>  h('h1',{}, 'header'),
+      footer: () => h('h1',{}, 'footer'),
+    })])
 
   },
   setup() {
